@@ -41,3 +41,55 @@ class ZealyAPI:
                     error_text = await response.text()
                     print(f"Error: {error_text}")
                     return None
+
+    async def add_xp(self, user_id: str, amount: int, label: str = "Core or Roll", description: str = "Yazı-tura oyunu kazancı") -> bool:
+        """Kullanıcıya XP ekle"""
+        url = f"{self.base_url}/communities/{self.subdomain}/users/{user_id}/xp"
+        payload = {
+            "xp": amount,
+            "label": label,
+            "description": description
+        }
+        
+        print(f"\nZealy API İsteği (POST - Add XP):")
+        print(f"URL: {url}")
+        print(f"User ID: {user_id}")
+        print(f"Amount: {amount}")
+        
+        async with aiohttp.ClientSession() as session:
+            async with session.post(url, headers=self.headers, json=payload) as response:
+                print(f"Status Code: {response.status}")
+                if response.status == 200:
+                    data = await response.json()
+                    print(f"Response: {data}")
+                    return True
+                else:
+                    error_text = await response.text()
+                    print(f"Error: {error_text}")
+                    return False
+
+    async def remove_xp(self, user_id: str, amount: int, label: str = "Core or Roll", description: str = "Yazı-tura oyunu kaybı") -> bool:
+        """Kullanıcıdan XP sil"""
+        url = f"{self.base_url}/communities/{self.subdomain}/users/{user_id}/xp"
+        payload = {
+            "xp": amount,
+            "label": label,
+            "description": description
+        }
+        
+        print(f"\nZealy API İsteği (DELETE - Remove XP):")
+        print(f"URL: {url}")
+        print(f"User ID: {user_id}")
+        print(f"Amount: {amount}")
+        
+        async with aiohttp.ClientSession() as session:
+            async with session.delete(url, headers=self.headers, json=payload) as response:
+                print(f"Status Code: {response.status}")
+                if response.status == 200:
+                    data = await response.json()
+                    print(f"Response: {data}")
+                    return True
+                else:
+                    error_text = await response.text()
+                    print(f"Error: {error_text}")
+                    return False

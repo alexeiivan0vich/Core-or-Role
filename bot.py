@@ -60,5 +60,43 @@ async def check_zealy(ctx):
     
     await ctx.send(response)
 
+@bot.command(name='add_xp')
+async def add_xp(ctx, amount: int):
+    """Test: Kullanıcıya XP ekle"""
+    discord_id = str(ctx.author.id)
+    
+    # Önce Zealy user bilgilerini al
+    user_info = await zealy.get_user_info(discord_id)
+    if not user_info:
+        await ctx.send("❌ Zealy hesabınız bulunamadı!")
+        return
+        
+    zealy_user_id = user_info.get('id')
+    success = await zealy.add_xp(zealy_user_id, amount)
+    
+    if success:
+        await ctx.send(f"✅ {amount} XP eklendi!")
+    else:
+        await ctx.send("❌ XP eklenirken bir hata oluştu!")
+
+@bot.command(name='remove_xp')
+async def remove_xp(ctx, amount: int):
+    """Test: Kullanıcıdan XP sil"""
+    discord_id = str(ctx.author.id)
+    
+    # Önce Zealy user bilgilerini al
+    user_info = await zealy.get_user_info(discord_id)
+    if not user_info:
+        await ctx.send("❌ Zealy hesabınız bulunamadı!")
+        return
+        
+    zealy_user_id = user_info.get('id')
+    success = await zealy.remove_xp(zealy_user_id, amount)
+    
+    if success:
+        await ctx.send(f"✅ {amount} XP silindi!")
+    else:
+        await ctx.send("❌ XP silinirken bir hata oluştu!")
+
 # Run the bot
 bot.run(os.getenv('DISCORD_TOKEN'))
